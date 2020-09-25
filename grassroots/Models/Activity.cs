@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace grassroots.Models
 {
-    public class Action
+    public class Activity
     {
         [Key]
-        public int ActionId { get; set; }
+        public int ActivityId { get; set; }
 
         [Required]
         public int UserId { get; set; }
@@ -28,11 +28,9 @@ namespace grassroots.Models
         public string Description { get; set; }
 
         [Required]
-        [DataType(DataType.Date)]
         public DateTime StartTime { get; set; }
 
         [Required]
-        [DataType(DataType.Date)]
         public DateTime EndTime { get; set; }
 
         [Required]

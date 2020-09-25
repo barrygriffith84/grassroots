@@ -19,5 +19,6 @@ namespace grassroots.Models
         
         [Required]
         public int Population { get; set; }
+
     }
 }
