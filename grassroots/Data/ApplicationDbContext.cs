@@ -14,7 +14,7 @@ namespace grassroots.Data
         {
         }
 
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<ApplicationUser> User { get; set; }
         public DbSet<grassroots.Models.Activity> Activity { get; set; }
         public DbSet<grassroots.Models.Event> Event { get; set; }
         public DbSet<grassroots.Models.Location> Location { get; set; }
