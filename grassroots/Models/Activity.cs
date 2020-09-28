@@ -12,7 +12,7 @@ namespace grassroots.Models
         public int ActivityId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public ApplicationUser User { get; set; }
 
@@ -21,6 +21,10 @@ namespace grassroots.Models
 
         public Location Location { get; set; }
 
+
+        [Required]
+        public string City { get; set; }
+
         [Required]
         public string Title { get; set; }
 
@@ -28,12 +32,14 @@ namespace grassroots.Models
         public string Description { get; set; }
 
         [Required]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Start Time")]
         public DateTime StartTime { get; set; }
 
         [Required]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Finish Time")]
         public DateTime EndTime { get; set; }
 
-        [Required]
-        public string City { get; set; }
     }
 }

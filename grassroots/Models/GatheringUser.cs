@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace grassroots.Models
 {
-    public class EventUser
+    public class GatheringUser
     {
         [Key]
-        public int EventUserId { get; set; }
+        public int GatheringUserId { get; set; }
 
         [Required]
-        public int EventId { get; set; }
-        public Event Event { get; set; }
+        public int GatheringId { get; set; }
+        public Gathering Gathering { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public ApplicationUser User { get; set; }
     }
 }

@@ -182,17 +182,15 @@ namespace grassroots.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ActivityId");
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Activity");
                 });
@@ -270,9 +268,9 @@ namespace grassroots.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("grassroots.Models.Event", b =>
+            modelBuilder.Entity("grassroots.Models.Gathering", b =>
                 {
-                    b.Property<int>("EventId")
+                    b.Property<int>("GatheringId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -301,17 +299,15 @@ namespace grassroots.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("EventId");
+                    b.HasKey("GatheringId");
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Event");
                 });
@@ -400,10 +396,12 @@ namespace grassroots.Migrations
 
                     b.HasOne("grassroots.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("grassroots.Models.Event", b =>
+            modelBuilder.Entity("grassroots.Models.Gathering", b =>
                 {
                     b.HasOne("grassroots.Models.Location", "Location")
                         .WithMany()
@@ -413,7 +411,9 @@ namespace grassroots.Migrations
 
                     b.HasOne("grassroots.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
