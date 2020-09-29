@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using grassroots.Data;
 using grassroots.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace grassroots.Controllers
 {
     public class ActivitiesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public ActivitiesController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ActivitiesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Activities
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Activity.Include(a => a.Location);
+            var user = await GetCurrentUserAsync();
+            var applicationDbContext = _context.Activity.Include(a => a.Location).Include(a => a.User)
+                .Where(a => a.UserId == user.Id);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,6 +42,7 @@ namespace grassroots.Controllers
 
             var activity = await _context.Activity
                 .Include(a => a.Location)
+                .Include(a => a.User)
                 .FirstOrDefaultAsync(m => m.ActivityId == id);
             if (activity == null)
             {
@@ -49,6 +56,7 @@ namespace grassroots.Controllers
         public IActionResult Create()
         {
             ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County");
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id");
             return View();
         }
 
@@ -57,15 +65,21 @@ namespace grassroots.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ActivityId,UserId,LocationId,Title,Description,StartTime,EndTime,City")] Activity activity)
+        public async Task<IActionResult> Create([Bind("ActivityId,UserId,LocationId,City,Title,Description,StartTime,EndTime")] Activity activity)
         {
+
+            ModelState.Remove("UserId");
+
             if (ModelState.IsValid)
             {
+                var user = await GetCurrentUserAsync();
+                activity.UserId = user.Id;
                 _context.Add(activity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County", activity.LocationId);
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", activity.UserId);
             return View(activity);
         }
 
@@ -83,6 +97,7 @@ namespace grassroots.Controllers
                 return NotFound();
             }
             ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County", activity.LocationId);
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", activity.UserId);
             return View(activity);
         }
 
@@ -91,17 +106,21 @@ namespace grassroots.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ActivityId,UserId,LocationId,Title,Description,StartTime,EndTime,City")] Activity activity)
+        public async Task<IActionResult> Edit(int id, [Bind("ActivityId,UserId,LocationId,City,Title,Description,StartTime,EndTime")] Activity activity)
         {
             if (id != activity.ActivityId)
             {
                 return NotFound();
             }
 
+            ModelState.Remove("UserId");
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var user = await GetCurrentUserAsync();
+                    activity.UserId = user.Id;
                     _context.Update(activity);
                     await _context.SaveChangesAsync();
                 }
@@ -119,6 +138,7 @@ namespace grassroots.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County", activity.LocationId);
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", activity.UserId);
             return View(activity);
         }
 
@@ -132,6 +152,7 @@ namespace grassroots.Controllers
 
             var activity = await _context.Activity
                 .Include(a => a.Location)
+                .Include(a => a.User)
                 .FirstOrDefaultAsync(m => m.ActivityId == id);
             if (activity == null)
             {

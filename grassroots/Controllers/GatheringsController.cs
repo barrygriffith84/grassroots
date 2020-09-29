@@ -10,23 +10,23 @@ using grassroots.Models;
 
 namespace grassroots.Controllers
 {
-    public class EventsController : Controller
+    public class GatheringsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public EventsController(ApplicationDbContext context)
+        public GatheringsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Events
+        // GET: Gatherings
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Event.Include(e => e.Location);
+            var applicationDbContext = _context.Event.Include(g => g.Location).Include(g => g.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Events/Details/5
+        // GET: Gatherings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,42 +34,45 @@ namespace grassroots.Controllers
                 return NotFound();
             }
 
-            var @event = await _context.Event
-                .Include(e => e.Location)
-                .FirstOrDefaultAsync(m => m.EventId == id);
-            if (@event == null)
+            var gathering = await _context.Event
+                .Include(g => g.Location)
+                .Include(g => g.User)
+                .FirstOrDefaultAsync(m => m.GatheringId == id);
+            if (gathering == null)
             {
                 return NotFound();
             }
 
-            return View(@event);
+            return View(gathering);
         }
 
-        // GET: Events/Create
+        // GET: Gatherings/Create
         public IActionResult Create()
         {
-            ViewData["LocationId"] = new SelectList(_context.Set<Location>(), "LocationId", "County");
+            ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County");
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id");
             return View();
         }
 
-        // POST: Events/Create
+        // POST: Gatherings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EventId,UserId,LocationId,Title,Description,MaxAttendees,StartTime,EndTime,City")] Event @event)
+        public async Task<IActionResult> Create([Bind("GatheringId,UserId,Title,Description,MaxAttendees,StartTime,EndTime,LocationId,City")] Gathering gathering)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(@event);
+                _context.Add(gathering);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationId"] = new SelectList(_context.Set<Location>(), "LocationId", "County", @event.LocationId);
-            return View(@event);
+            ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County", gathering.LocationId);
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", gathering.UserId);
+            return View(gathering);
         }
 
-        // GET: Events/Edit/5
+        // GET: Gatherings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,23 +80,24 @@ namespace grassroots.Controllers
                 return NotFound();
             }
 
-            var @event = await _context.Event.FindAsync(id);
-            if (@event == null)
+            var gathering = await _context.Event.FindAsync(id);
+            if (gathering == null)
             {
                 return NotFound();
             }
-            ViewData["LocationId"] = new SelectList(_context.Set<Location>(), "LocationId", "County", @event.LocationId);
-            return View(@event);
+            ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County", gathering.LocationId);
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", gathering.UserId);
+            return View(gathering);
         }
 
-        // POST: Events/Edit/5
+        // POST: Gatherings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EventId,UserId,LocationId,Title,Description,MaxAttendees,StartTime,EndTime,City")] Event @event)
+        public async Task<IActionResult> Edit(int id, [Bind("GatheringId,UserId,Title,Description,MaxAttendees,StartTime,EndTime,LocationId,City")] Gathering gathering)
         {
-            if (id != @event.EventId)
+            if (id != gathering.GatheringId)
             {
                 return NotFound();
             }
@@ -102,12 +106,12 @@ namespace grassroots.Controllers
             {
                 try
                 {
-                    _context.Update(@event);
+                    _context.Update(gathering);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EventExists(@event.EventId))
+                    if (!GatheringExists(gathering.GatheringId))
                     {
                         return NotFound();
                     }
@@ -118,11 +122,12 @@ namespace grassroots.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationId"] = new SelectList(_context.Set<Location>(), "LocationId", "County", @event.LocationId);
-            return View(@event);
+            ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County", gathering.LocationId);
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", gathering.UserId);
+            return View(gathering);
         }
 
-        // GET: Events/Delete/5
+        // GET: Gatherings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,31 +135,32 @@ namespace grassroots.Controllers
                 return NotFound();
             }
 
-            var @event = await _context.Event
-                .Include(e => e.Location)
-                .FirstOrDefaultAsync(m => m.EventId == id);
-            if (@event == null)
+            var gathering = await _context.Event
+                .Include(g => g.Location)
+                .Include(g => g.User)
+                .FirstOrDefaultAsync(m => m.GatheringId == id);
+            if (gathering == null)
             {
                 return NotFound();
             }
 
-            return View(@event);
+            return View(gathering);
         }
 
-        // POST: Events/Delete/5
+        // POST: Gatherings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var @event = await _context.Event.FindAsync(id);
-            _context.Event.Remove(@event);
+            var gathering = await _context.Event.FindAsync(id);
+            _context.Event.Remove(gathering);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EventExists(int id)
+        private bool GatheringExists(int id)
         {
-            return _context.Event.Any(e => e.EventId == id);
+            return _context.Event.Any(e => e.GatheringId == id);
         }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace grassroots.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -175,14 +175,13 @@ namespace grassroots.Migrations
                 {
                     ActivityId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(nullable: false),
-                    UserId1 = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false),
                     LocationId = table.Column<int>(nullable: false),
+                    City = table.Column<string>(nullable: false),
                     Title = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
-                    EndTime = table.Column<DateTime>(nullable: false),
-                    City = table.Column<string>(nullable: false)
+                    EndTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,32 +193,31 @@ namespace grassroots.Migrations
                         principalColumn: "LocationId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Activity_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Activity_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Event",
                 columns: table => new
                 {
-                    EventId = table.Column<int>(nullable: false)
+                    GatheringId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(nullable: false),
-                    UserId1 = table.Column<string>(nullable: true),
-                    LocationId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
                     Title = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: false),
                     MaxAttendees = table.Column<int>(nullable: true),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
+                    LocationId = table.Column<int>(nullable: false),
                     City = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Event", x => x.EventId);
+                    table.PrimaryKey("PK_Event", x => x.GatheringId);
                     table.ForeignKey(
                         name: "FK_Event_Location_LocationId",
                         column: x => x.LocationId,
@@ -227,11 +225,11 @@ namespace grassroots.Migrations
                         principalColumn: "LocationId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Event_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Event_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -240,9 +238,9 @@ namespace grassroots.Migrations
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Activity_UserId1",
+                name: "IX_Activity_UserId",
                 table: "Activity",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -289,9 +287,9 @@ namespace grassroots.Migrations
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Event_UserId1",
+                name: "IX_Event_UserId",
                 table: "Event",
-                column: "UserId1");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
