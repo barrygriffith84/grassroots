@@ -10,8 +10,8 @@ using grassroots.Data;
 namespace grassroots.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200928193628_initialMigration")]
-    partial class initialMigration
+    [Migration("20200929185048_GatheringUserJoin")]
+    partial class GatheringUserJoin
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -311,7 +311,30 @@ namespace grassroots.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Event");
+                    b.ToTable("Gathering");
+                });
+
+            modelBuilder.Entity("grassroots.Models.GatheringUser", b =>
+                {
+                    b.Property<int>("GatheringUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GatheringId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("GatheringUserId");
+
+                    b.HasIndex("GatheringId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GatheringUser");
                 });
 
             modelBuilder.Entity("grassroots.Models.Location", b =>
@@ -415,6 +438,21 @@ namespace grassroots.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("grassroots.Models.GatheringUser", b =>
+                {
+                    b.HasOne("grassroots.Models.Gathering", "Gathering")
+                        .WithMany("GatheringUsers")
+                        .HasForeignKey("GatheringId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("grassroots.Models.ApplicationUser", "User")
+                        .WithMany("GatheringUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

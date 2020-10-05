@@ -22,7 +22,7 @@ namespace grassroots.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-  
+        public List<GatheringUser> GatheringUsers { get; set; } = new List<GatheringUser>();
 
 
     }

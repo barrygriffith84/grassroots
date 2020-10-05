@@ -55,6 +55,7 @@ namespace grassroots.Controllers
         // GET: Activities/Create
         public IActionResult Create()
         {
+
             ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County");
             ViewData["UserId"] = new SelectList(_context.User, "Id", "Id");
             return View();
