@@ -1,0 +1,63 @@
+﻿@model IEnumerable<grassroots.Models.Gathering>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Join a Gathering</h1>
+
+<p>
+    <a asp-action="Create">Create a New Event</a> |
+    <a asp-action="Index">My Events</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+          
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location.County)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+             
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.GatheringId"> @Html.DisplayFor(modelItem => item.Title) </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location.County)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                   
+                    <a asp-action="Join" asp-route-id="@item.GatheringId">Join</a> 
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

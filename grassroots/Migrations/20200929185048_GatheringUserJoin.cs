@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace grassroots.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class GatheringUserJoin : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -201,7 +201,7 @@ namespace grassroots.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Event",
+                name: "Gathering",
                 columns: table => new
                 {
                     GatheringId = table.Column<int>(nullable: false)
@@ -217,19 +217,45 @@ namespace grassroots.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Event", x => x.GatheringId);
+                    table.PrimaryKey("PK_Gathering", x => x.GatheringId);
                     table.ForeignKey(
-                        name: "FK_Event_Location_LocationId",
+                        name: "FK_Gathering_Location_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Location",
                         principalColumn: "LocationId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Event_AspNetUsers_UserId",
+                        name: "FK_Gathering_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GatheringUser",
+                columns: table => new
+                {
+                    GatheringUserId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GatheringId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GatheringUser", x => x.GatheringUserId);
+                    table.ForeignKey(
+                        name: "FK_GatheringUser_Gathering_GatheringId",
+                        column: x => x.GatheringId,
+                        principalTable: "Gathering",
+                        principalColumn: "GatheringId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GatheringUser_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -282,13 +308,23 @@ namespace grassroots.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Event_LocationId",
-                table: "Event",
+                name: "IX_Gathering_LocationId",
+                table: "Gathering",
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Event_UserId",
-                table: "Event",
+                name: "IX_Gathering_UserId",
+                table: "Gathering",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GatheringUser_GatheringId",
+                table: "GatheringUser",
+                column: "GatheringId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GatheringUser_UserId",
+                table: "GatheringUser",
                 column: "UserId");
         }
 
@@ -313,10 +349,13 @@ namespace grassroots.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Event");
+                name: "GatheringUser");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Gathering");
 
             migrationBuilder.DropTable(
                 name: "Location");

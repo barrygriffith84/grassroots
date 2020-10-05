@@ -21,6 +21,7 @@ namespace grassroots.Models
         [Required]
         public string Description { get; set; }
 
+        [Display(Name = "Maximum Attendees")]
         public int? MaxAttendees { get; set; }
 
         [Required]
@@ -43,6 +44,6 @@ namespace grassroots.Models
         public string City { get; set; }
 
 
-        List<GatheringUser> GatheringUsers { get; set; } = new List<GatheringUser>();
+        public List<GatheringUser> GatheringUsers { get; set; } = new List<GatheringUser>();
     }
 }

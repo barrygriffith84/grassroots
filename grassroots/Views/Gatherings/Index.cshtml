@@ -1,77 +1,156 @@
-﻿@model IEnumerable<grassroots.Models.Gathering>
+﻿@using Microsoft.AspNetCore.Identity
+@using grassroots.Models;
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@model PaginatedList<grassroots.Models.Gathering>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+@*Variable that stores the user id of the logged-in user*@
+@{var userId = UserManager.GetUserId(User); }
+
+
+@if (ViewData["Value"] == null)
+{
+    <h1>My Gatherings</h1>
+}
+else if (ViewData["Value"].ToString() == "joined")
+{
+    <h1>Gatherings You Have Joined</h1>
+}
+else
+{
+    <h1>Join a Gathering</h1>
+}
+
+
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create a New Gathering</a> |
+    <a asp-action="Index">My Gatherings</a> |
+    <a asp-action="Index" asp-route-value="joined">Gatherings You Have Joined</a> |
+    <a asp-action="Index" asp-route-value="join">Join a New Event</a>
 </p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by county: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="hidden" name="value" value="@ViewData["Value"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index" asp-route-value="@ViewData["Value"]">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-value="@ViewData["Value"]">
+                    Title
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AttendeesSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-value="@ViewData["Value"]">
+                    Maximum Attendees
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["StartSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-value="@ViewData["Value"]">
+                    Start Time
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaxAttendees)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["FinishSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-value="@ViewData["Value"]">
+                    Finish Time
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartTime)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CountySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-value="@ViewData["Value"]">
+                    County
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CitySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-value="@ViewData["Value"]">
+                    City
+                </a>
+
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaxAttendees)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location.County)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.GatheringId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.GatheringId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.GatheringId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxAttendees)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location.County)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+
+                    @if (ViewData["Value"] == null)
+                    {
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@item.GatheringId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.GatheringId">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.GatheringId">Delete</a>
+                        </div>
+
+                    }
+                    else if (ViewData["Value"].ToString() == "joined")
+                    {
+                        <a asp-action="LeaveGathering" asp-route-id="@item.GatheringUsers.FirstOrDefault(gu => gu.UserId == userId).GatheringUserId">Leave Gathering</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.GatheringId" asp-route-detailType="join">Join Gathering</a>
+                    }
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   asp-route-value="@ViewData["Value"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   asp-route-value="@ViewData["Value"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
