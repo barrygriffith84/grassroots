@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using grassroots.Data;
 using grassroots.Models;
 using Microsoft.AspNetCore.Identity;
+using grassroots.Models.ViewModels;
+using System.Security.Cryptography;
 
 namespace grassroots.Controllers
 {
@@ -172,6 +174,61 @@ namespace grassroots.Controllers
             _context.Activity.Remove(activity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        //Controller to get all Actions and GatheringUsers
+        public async Task<IActionResult> MyReport()
+        {
+            var user = await GetCurrentUserAsync();
+            MyReport myReport = new MyReport();
+
+            myReport.activities = await _context.Activity.Include(a => a.Location).Where(a => a.EndTime < DateTime.Now).ToListAsync();
+
+            myReport.gatheringUsers = await _context.GatheringUser.Include(gu => gu.Gathering).ThenInclude(g => g.Location).Where(gu => gu.Gathering.EndTime < DateTime.Now).ToListAsync();
+            List<string> users = new List<string>();
+
+            //Get all of the activities that have ended for the user that is logged in.
+            myReport.myActivityHistory = myReport.activities.Where(a => a.UserId == user.Id).ToList();
+
+            //Get all of the gatherings the logged-in user has attended that have ended.
+            myReport.myGatheringHistory = myReport.gatheringUsers.Where(gu => gu.UserId == user.Id).ToList();
+
+            //For each activity, get the hours between the start time and end time and store them in the TotalCampaignHours property.
+            myReport.activities.ForEach(a =>
+            {
+                TimeSpan diff = a.EndTime - a.StartTime;
+                double hours = diff.TotalHours;
+                users.Add(a.UserId);
+
+                if(a.UserId == user.Id)
+                {
+                    myReport.MyHours += hours;
+                }
+
+                myReport.TotalCampaignHours += hours;
+            });
+
+            myReport.gatheringUsers.ForEach( gu =>
+                   {
+                TimeSpan diff = gu.Gathering.EndTime - gu.Gathering.StartTime;
+                double hours = diff.TotalHours;
+                       users.Add(gu.UserId);
+
+                if (gu.UserId == user.Id)
+                {
+                     myReport.MyHours += hours;
+                }
+
+                myReport.TotalCampaignHours += hours;
+            });
+
+            //Get the number of distinct users that are active(Have completed at an Activity or attended a Gathering).
+            List<string> distinctUsers = users.Distinct().ToList();
+            int ActiveUsersCount = distinctUsers.Count();
+
+            myReport.AverageUserHours = myReport.TotalCampaignHours / ActiveUsersCount;
+              
+            return View(myReport);
         }
 
         private bool ActivityExists(int id)
