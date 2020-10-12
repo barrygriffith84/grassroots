@@ -13,23 +13,20 @@
     <thead>
         <tr>
             <th>
-                County
-            </th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CountySortParm"]">  County </a>
+</th>
             <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CitySortParm"]"> @Html.DisplayNameFor(model => model.City)</a>
+</th>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]"> @Html.DisplayNameFor(model => model.Title)</a>
+</th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["StartSortParm"]"> @Html.DisplayNameFor(model => model.StartTime)</a>
+</th>
             <th>
-                @Html.DisplayNameFor(model => model.StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["FinishSortParm"]">  @Html.DisplayNameFor(model => model.EndTime)</a>
+</th>
             <th></th>
         </tr>
     </thead>
@@ -44,9 +41,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StartTime)

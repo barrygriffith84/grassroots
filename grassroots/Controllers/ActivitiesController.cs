@@ -25,11 +25,65 @@ namespace grassroots.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Activities
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
+            //Get the current user
             var user = await GetCurrentUserAsync();
+
+            //Start date, County, City, Title, Finish date for the table sorts
+            ViewData["StartSortParm"] = String.IsNullOrEmpty(sortOrder) ? "start_desc" : "";
+            ViewData["CountySortParm"] = sortOrder == "county_desc" ? "county_asc" : "county_desc";
+            ViewData["CitySortParm"] = sortOrder == "city_desc" ? "city_asc" : "city_desc";
+            ViewData["TitleSortParm"] = sortOrder == "title_desc" ? "title_asc" : "title_desc";
+            ViewData["FinishSortParm"] = sortOrder == "finish_desc" ? "finish_asc" : "finish_desc";
+
             var applicationDbContext = _context.Activity.Include(a => a.Location).Include(a => a.User)
                 .Where(a => a.UserId == user.Id);
+
+            //Table sorts
+            switch (sortOrder)
+            {
+                case "county_asc":
+                    applicationDbContext = applicationDbContext.OrderBy(g => g.Location.County);
+                    break;
+
+                case "county_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(g => g.Location.County);
+                    break;
+
+                case "city_asc":
+                    applicationDbContext = applicationDbContext.OrderBy(g => g.City);
+                    break;
+
+                case "city_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(g => g.City);
+                    break;
+
+                case "title_asc":
+                    applicationDbContext = applicationDbContext.OrderBy(g => g.Title);
+                    break;
+
+                case "title_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(g => g.Title);
+                    break;
+
+                case "start_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(g => g.StartTime);
+                    break;
+
+                case "finish_asc":
+                    applicationDbContext = applicationDbContext.OrderBy(g => g.EndTime);
+                    break;
+
+                case "finish_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(g => g.EndTime);
+                    break;
+
+                default:
+                    applicationDbContext = applicationDbContext = applicationDbContext.OrderBy(g => g.StartTime);
+                    break;
+            }
+
             return View(await applicationDbContext.ToListAsync());
         }
 
