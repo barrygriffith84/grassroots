@@ -25,7 +25,7 @@ namespace grassroots.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Activities
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             //Get the current user
             var user = await GetCurrentUserAsync();
@@ -36,9 +36,19 @@ namespace grassroots.Controllers
             ViewData["CitySortParm"] = sortOrder == "city_desc" ? "city_asc" : "city_desc";
             ViewData["TitleSortParm"] = sortOrder == "title_desc" ? "title_asc" : "title_desc";
             ViewData["FinishSortParm"] = sortOrder == "finish_desc" ? "finish_asc" : "finish_desc";
+            
+            //Search
+            ViewData["CurrentFilter"] = searchString;
+
 
             var applicationDbContext = _context.Activity.Include(a => a.Location).Include(a => a.User)
                 .Where(a => a.UserId == user.Id);
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                applicationDbContext = applicationDbContext.Where(a => a.Location.County.Contains(searchString));
+            }
 
             //Table sorts
             switch (sortOrder)
