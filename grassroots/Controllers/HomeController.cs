@@ -33,5 +33,10 @@ namespace grassroots.Controllers
         {
             return base.View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Broken()
+        {
+            return RedirectToAction(nameof(Broken));
+        }
     }
 }

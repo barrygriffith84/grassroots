@@ -51,7 +51,7 @@
 <div>
     @if ($"{ViewData["DetailType"]}" == "join")
     {
-       
+
         <form asp-action="JoinGathering" asp-route-id="@Model.GatheringId">
             <input type="hidden" asp-for="GatheringId" />
             <input type="submit" value="Join" class="btn btn-primary" /> |
@@ -62,5 +62,7 @@
     {
         <a asp-action="Index">Back to List</a>
     }
+
+  
 
 </div>

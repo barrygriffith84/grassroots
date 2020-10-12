@@ -62,7 +62,7 @@ namespace grassroots.Controllers
                 
             if (value == "join") //Return Gatherings the logged-in user hasn't joined
             {
-                applicationDbContext = applicationDbContext.Where(g => g.StartTime > DateTime.Now && !g.GatheringUsers.Any(gu => gu.UserId == user.Id) && g.UserId != user.Id);
+                applicationDbContext = applicationDbContext.Where(g => g.StartTime > DateTime.Now && !g.GatheringUsers.Any(gu => gu.UserId == user.Id));
             }
             else if (value == "joined") //Return Gatherings the logged-in user has joined
             {
@@ -224,6 +224,7 @@ namespace grassroots.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["LocationId"] = new SelectList(_context.Location, "LocationId", "County", gathering.LocationId);
             ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", gathering.UserId);
             return View(gathering);

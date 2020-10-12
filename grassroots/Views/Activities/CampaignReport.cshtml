@@ -1,0 +1,205 @@
+﻿@model grassroots.Models.ViewModels.CampaignReport
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<script src="~/lib/Chart/highcharts.js"></script>
+<script src="~/lib/Chart/exporting.js"></script>
+<script src="~/lib/Chart/accessibility.js"></script>
+<script src="~/lib/Chart/export-data.js"></script>
+<script src="~/lib/Chart/variable-pie.js"></script>
+
+<h1>Campaign Report</h1>
+
+<div>
+
+    @{ Model.locations = Model.locations.OrderByDescending(l => l.Population).ToList();}
+    <h4>Top Five Counties by Population</h4>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    County
+                </th>
+                <th>
+                    Population
+                </th>
+                <th>
+                    Volunteer Hours
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @*Get the top five counties by population*@
+            @for (int i = 0; i < 5; i++)
+            {
+                <tr>
+                    <td class="col-sm-10">
+                        @Html.DisplayFor(model => model.locations[i].County)
+                    </td>
+                    <td class="col-sm-10">
+                        @Html.DisplayFor(model => model.locations[i].Population)
+                    </td>
+                    <td class="col-sm-10">
+                        @Html.DisplayFor(model => model.locations[i].ManHours)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+        <p class="highcharts-description">
+        </p>
+    </figure>
+
+    @{ Model.locationsAdjustedPopulation = Model.locations.OrderByDescending(l => l.adjustedPopulation).Take(5).ToList();}
+    <h4>Top Five Counties in Need of Resources</h4>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    County
+                </th>
+                <th>
+                    Population
+                </th>
+                <th>
+                    Volunteer Hours
+                </th>
+                <th>
+                    *Adjusted Population
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @*Get the top five counties by population*@
+            @for (int i = 0; i < 5; i++)
+            {
+                <tr>
+                    <td class="col-sm-10">
+                        @Html.DisplayFor(model => model.locationsAdjustedPopulation[i].County)
+                    </td>
+                    <td class="col-sm-10">
+                        @Html.DisplayFor(model => model.locationsAdjustedPopulation[i].Population)
+                    </td>
+                    <td class="col-sm-10">
+                        @Html.DisplayFor(model => model.locationsAdjustedPopulation[i].ManHours)
+                    </td>
+                    <td class="col-sm-10">
+                        @Html.DisplayFor(model => model.locationsAdjustedPopulation[i].adjustedPopulation)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>*Adjusted Population is determined by Population - Volunteer Hours * 5</p>
+
+    <figure class="highcharts-figure">
+        <div id="adjusted-pop-container"></div>
+        <p class="highcharts-description">
+        </p>
+    </figure>
+</div>
+
+<script>
+    Highcharts.chart('container', {
+        chart: {
+            type: 'variablepie'
+        },
+        title: {
+            text: 'Counties compared by population and total volunteer hours.'
+        },
+        tooltip: {
+            headerFormat: '',
+            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                'Area (square km): <b>{point.y}</b><br/>' +
+                'Population density (people per square km): <b>{point.z}</b><br/>'
+        },
+        series: [{
+            minPointSize: 10,
+            innerSize: '20%',
+            zMin: 0,
+            name: 'counties',
+            data: [{
+                name: '@Model.locations[0].County',
+                y: @Model.locations[0].Population,
+                z: @Model.locations[0].ManHours,
+            }, {
+                name: '@Model.locations[1].County',
+                y: @Model.locations[1].Population,
+                z: @Model.locations[1].ManHours,
+            }, {
+                name: '@Model.locations[2].County',
+                y: @Model.locations[2].Population,
+                z: @Model.locations[2].ManHours,
+            }, {
+                name: '@Model.locations[3].County',
+                y: @Model.locations[3].Population,
+                z: @Model.locations[3].ManHours,
+            }, {
+                name: '@Model.locations[4].County',
+                y: @Model.locations[4].Population,
+                z: @Model.locations[4].ManHours,
+            }]
+        }]
+    });
+</script>
+
+<script>
+    Highcharts.chart('adjusted-pop-container', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Top 5 Counties in Need of Campaign Resources'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: [{
+                name: '@Model.locationsAdjustedPopulation[0].County',
+                y: @Model.locationsAdjustedPopulation[0].Population,
+                sliced: true,
+                selected: true
+            }, {
+               name: '@Model.locationsAdjustedPopulation[1].County',
+                y: @Model.locationsAdjustedPopulation[1].Population,
+            }, {
+               name: '@Model.locationsAdjustedPopulation[2].County',
+                y: @Model.locationsAdjustedPopulation[2].Population,
+            }, {
+                name: '@Model.locationsAdjustedPopulation[3].County',
+                y: @Model.locationsAdjustedPopulation[3].Population,
+            }, {
+               name: '@Model.locationsAdjustedPopulation[4].County',
+                y: @Model.locationsAdjustedPopulation[4].Population,
+             }]
+        }]
+    });</script>
+

@@ -1,0 +1,132 @@
+﻿@model grassroots.Models.ViewModels.MyReport
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>My Report</h1>
+
+<div class="media">
+    <img src="~/images/working.jpg" class="mr-3" alt="working image" width="250">
+    <div class="media-body">
+        <h5 class="mt-0">Volunteer Comparison</h5>
+        <p>You have spent <strong>@Html.DisplayFor(model => model.MyHours)</strong> hours volunteeering for the campaign</p>
+
+        <p>The average user as spent <strong>@Html.DisplayFor(model => model.AverageUserHours)</strong> hours volunteering for the campaign </p>
+    </div>
+</div>
+
+<h4>Your Activity History</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                County
+            </th>
+            <th>
+                City
+            </th>
+            <th>
+                Title
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Start Time
+            </th>
+            <th>
+                End Time
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Activity activity in Model.myActivityHistory)
+        {
+            <tr>
+                <td>
+                    @activity.Location.County
+                </td>
+                <td>
+                    @activity.City
+                </td>
+                <td>
+                    @activity.Title
+                </td>
+                <td>
+                    @activity.Description
+                </td>
+                <td>
+                    @activity.StartTime
+                </td>
+                <td>
+                    @activity.EndTime
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+<h4>Your Gatherings History</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                County
+            </th>
+            <th>
+                City
+            </th>
+            <th>
+                Title
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Start Time
+            </th>
+            <th>
+                End Time
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (GatheringUser gatheringUser in Model.myGatheringHistory)
+        {
+            <tr>
+                <td>
+                    @gatheringUser.Gathering.Location.County
+                </td>
+                <td>
+                    @gatheringUser.Gathering.City
+                </td>
+                <td>
+                    @gatheringUser.Gathering.Title
+                </td>
+                <td>
+                    @gatheringUser.Gathering.Description
+                </td>
+                <td>
+                    @gatheringUser.Gathering.StartTime
+                </td>
+                <td>
+                    @gatheringUser.Gathering.EndTime
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+
+
+
+
