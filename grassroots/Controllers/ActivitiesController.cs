@@ -25,10 +25,12 @@ namespace grassroots.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Activities
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
             //Get the current user
             var user = await GetCurrentUserAsync();
+
+            ViewData["CurrentSort"] = sortOrder;
 
             //Start date, County, City, Title, Finish date for the table sorts
             ViewData["StartSortParm"] = String.IsNullOrEmpty(sortOrder) ? "start_desc" : "";
@@ -40,10 +42,19 @@ namespace grassroots.Controllers
             //Search
             ViewData["CurrentFilter"] = searchString;
 
-
+            //Get the activies for the logged-in user
             var applicationDbContext = _context.Activity.Include(a => a.Location).Include(a => a.User)
                 .Where(a => a.UserId == user.Id);
 
+            //Paging
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -93,8 +104,11 @@ namespace grassroots.Controllers
                     applicationDbContext = applicationDbContext = applicationDbContext.OrderBy(g => g.StartTime);
                     break;
             }
+            //Prints 5 activites per page
+            int pageSize = 5;
 
-            return View(await applicationDbContext.ToListAsync());
+            return View(await PaginatedList<Activity>.CreateAsync(applicationDbContext.AsNoTracking(), pageNumber ?? 1, pageSize));
+
         }
 
         // GET: Activities/Details/5
