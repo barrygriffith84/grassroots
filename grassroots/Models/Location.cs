@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,5 +21,10 @@ namespace grassroots.Models
         [Required]
         public int Population { get; set; }
 
+        [NotMapped]
+        public double ManHours { get; set; }
+
+        [NotMapped]
+        public double adjustedPopulation { get; set; }
     }
 }
