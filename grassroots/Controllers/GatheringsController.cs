@@ -131,7 +131,7 @@ namespace grassroots.Controllers
                     break;
             }
             //Number of rows printed per page
-            int pageSize = 3;
+            int pageSize = 5;
 
             return View(await PaginatedList<Gathering>.CreateAsync(applicationDbContext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
