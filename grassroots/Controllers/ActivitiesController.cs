@@ -340,6 +340,17 @@ namespace grassroots.Controllers
             return View(campaignReport);
         }
 
+        public async Task<IActionResult> GetAll()
+        {
+            var user = await GetCurrentUserAsync();
+
+            List<Activity> activities = await _context.Activity
+                .Where(a => a.UserId == user.Id)
+                .ToListAsync();
+
+            return Ok(activities);
+
+        }
         private bool ActivityExists(int id)
         {
             return _context.Activity.Any(e => e.ActivityId == id);
