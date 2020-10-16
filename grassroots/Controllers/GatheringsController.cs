@@ -66,7 +66,7 @@ namespace grassroots.Controllers
             }
             else if (value == "joined") //Return Gatherings the logged-in user has joined
             {
-                applicationDbContext = applicationDbContext.Where(g => g.EndTime > DateTime.Now && g.GatheringUsers.Any(gu => gu.UserId == user.Id));
+                applicationDbContext = applicationDbContext.Where(g => g.GatheringUsers.Any(gu => gu.UserId == user.Id));
             }
             else //Return Gatherings the user has created
             {

@@ -340,17 +340,31 @@ namespace grassroots.Controllers
             return View(campaignReport);
         }
 
-        public async Task<IActionResult> GetAll()
+        public IActionResult Schedule()
+        {
+
+            return View();
+
+        }
+
+        public async Task<IActionResult> MySchedule()
         {
             var user = await GetCurrentUserAsync();
 
-            List<Activity> activities = await _context.Activity
+            MySchedule mySchedule = new MySchedule();
+
+            mySchedule.activities = await _context.Activity
                 .Where(a => a.UserId == user.Id)
                 .ToListAsync();
 
-            return Ok(activities);
+            mySchedule.gatherings = await _context.Gathering
+                .Where(g => g.GatheringUsers.Any(gu => gu.UserId == user.Id))
+                .ToListAsync();
 
+            return Ok(mySchedule);
         }
+
+      
         private bool ActivityExists(int id)
         {
             return _context.Activity.Any(e => e.ActivityId == id);
