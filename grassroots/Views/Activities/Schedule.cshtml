@@ -6,8 +6,6 @@
 
 }
 
-
-
 <div style="height:80vh">
     <div class="card" style="height:80vh">
         <h3 class="card-header" id="monthAndYear"></h3>
@@ -257,6 +255,7 @@ let today = new Date();
                             var anchor = document.createElement("A")
                             var textnode = document.createTextNode("Activity");
                             anchor.setAttribute("href", `/Activities/Details/${r.activityId}`);
+                            anchor.setAttribute("target", "_blank");
                             anchor.appendChild(textnode);
                             node.appendChild(anchor);
                             document.querySelector(`#p${r.startTime.substring(0, r.startTime.indexOf("T"))}`).appendChild(node)
@@ -268,6 +267,7 @@ let today = new Date();
                             var anchor = document.createElement("A")
                             var textnode = document.createTextNode("Gathering");
                             anchor.setAttribute("href", `/Gatherings/Details/${r.gatheringId}`);
+                            anchor.setAttribute("target", "_blank");
                             console.log(r);
                             anchor.appendChild(textnode);
                             node.appendChild(anchor);
@@ -279,21 +279,4 @@ let today = new Date();
             )
 
         }
-</script>
-
-
-<script>
-        @*var testArray = ["@Model.activities[0].StartTime.ToShortDateString()", "@Model.activities[1].StartTime.ToShortDateString()", "@Model.activities[2].StartTime.ToShortDateString()"];*@
-
-        var testArray = [];
-
-        @*for (let i = 0; i < @Model.activities.Count(); i++) {
-
-            testArray.push(@Model.activities["<%= i %>"].StartTime.ToShortDateString());
-        }*@
-
-
-
-
-
 </script>
