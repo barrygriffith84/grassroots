@@ -39,7 +39,22 @@ namespace grassroots.Models
         [Required]
         [DataType(DataType.DateTime)]
         [Display(Name = "Finish Time")]
+        [ActivityDateChecker]
         public DateTime EndTime { get; set; }
 
     }
+
+    //Custom validator to make sure the Finish Time comes after the Start Time.
+    public class ActivityDateChecker : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var activity = (Activity)validationContext.ObjectInstance;
+
+            return (activity.StartTime < activity.EndTime)
+                ? ValidationResult.Success
+                : new ValidationResult("The finish time should come after the start time.");
+        }
+    }
 }
+

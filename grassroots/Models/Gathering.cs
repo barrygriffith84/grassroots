@@ -32,6 +32,7 @@ namespace grassroots.Models
         [Required]
         [DataType(DataType.DateTime)]
         [Display(Name = "Finish Time")]
+        [GatheringDateChecker]
         public DateTime EndTime { get; set; }
 
 
@@ -45,5 +46,18 @@ namespace grassroots.Models
 
 
         public List<GatheringUser> GatheringUsers { get; set; } = new List<GatheringUser>();
+    }
+
+    //Custom validator to make sure the Finish Time comes after the Start Time.
+    public class GatheringDateChecker : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var gathering = (Gathering)validationContext.ObjectInstance;
+
+            return (gathering.StartTime < gathering.EndTime)
+                ? ValidationResult.Success
+                : new ValidationResult("The finish time should come after the start time.");
+        }
     }
 }
