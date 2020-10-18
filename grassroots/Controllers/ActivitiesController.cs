@@ -323,12 +323,12 @@ namespace grassroots.Controllers
             };
 
             //Go through each Activity and add the hours to the manhours property in the Location for the activity.
-            campaignReport.activities.ForEach(a => campaignReport.locations.FirstOrDefault(l => l.LocationId == a.LocationId).ManHours += (a.EndTime - a.StartTime).TotalHours);
+            campaignReport.activities.ForEach(a => campaignReport.locations.First(l => l.LocationId == a.LocationId).ManHours += (a.EndTime - a.StartTime).TotalHours);
 
-            //var test = campaignReport.activities[0].EndTime - campaignReport.activities[0].StartTime;
+
+
             campaignReport.gatheringUsers.ForEach(gu => campaignReport.locations.FirstOrDefault(l => l.LocationId == gu.Gathering.LocationId).ManHours += (gu.Gathering.EndTime - gu.Gathering.StartTime).TotalHours);
 
-            var test = (campaignReport.gatheringUsers[0].Gathering.EndTime - campaignReport.gatheringUsers[0].Gathering.StartTime).TotalHours;
 
             campaignReport.locations.ForEach(l => l.adjustedPopulation = l.Population - l.ManHours * 5);
 
