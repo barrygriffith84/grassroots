@@ -20,3 +20,12 @@ https://www.youtube.com/watch?v=8ITCrvrkRXQ&feature=emb_title
 ### Homepage
 <img src="https://user-images.githubusercontent.com/62182071/103713943-7fe9a880-4f8b-11eb-8452-11d75af2c19d.png">
 
+### My Activites
+<img src="https://user-images.githubusercontent.com/62182071/103714488-c390e200-4f8c-11eb-8e0a-64a31d3f3669.png">
+
+The My Activities page displays single-person actions taken on behalf of a campaign.  Here the user can see:
+* Every Activity the user has scheduled.
+* The city and county for each activity.
+* The start and finish time for each activity.
+
+The page also features the ability to filter by county, sort by each column header, and to navigate through each page of activites (the app prints five activities per page).
