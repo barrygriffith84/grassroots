@@ -54,3 +54,9 @@ The My Report page lets the user know how many hours they've completed and how m
 <img src="https://user-images.githubusercontent.com/62182071/103728160-3446f700-4fab-11eb-9098-d1c14f5c0b2a.png">
 
 The Campaign Report page lets the user know the top-five counties by population and the top-five counties in need of resources in the campaign.  It features a multi-variable pie chart representing the population and volunteer hours for each county.  It also features a traditional pie chart for the adjusted population of each county.  Adjust population is caluclated by taking population and subtracting the volunteer hours multiplied by five (Population - Hours * 5).
+
+### My Schedule
+
+<img src="https://user-images.githubusercontent.com/62182071/103732363-357d2180-4fb5-11eb-81bc-f0f5d3bc6669.png">
+
+The My Schedule page features a calendar with all of the activities and gatherins the user has scheduled.  You can click on the link to each activity or gathering to view the details.
