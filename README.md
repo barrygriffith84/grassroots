@@ -29,3 +29,16 @@ The My Activities page displays single-person actions taken on behalf of a campa
 * The start and finish time for each activity.
 
 The page also features the ability to filter by county, sort by each column header, and to navigate through each page of activites (the app prints five activities per page).
+
+### Gatherings
+<img src="https://user-images.githubusercontent.com/62182071/103718861-bf1cf700-4f95-11eb-8390-b84ee3a5f098.png">
+
+The Gatherings page displays group actions taken on behalf of a campaign.  Here the user can see:
+* Every Gathering the user has scheduled.
+* The maximum amount of people that can attend the gathering.
+* The city and county for each activity.
+* The start and finish time for each activity.
+* Gatherings you have joined.
+* Gatherings created by someone else that you can join.
+
+The page also features the ability to filter by county, sort by each column header, and to navigate through each page of gatherings (the app prints five gatherings per page).
