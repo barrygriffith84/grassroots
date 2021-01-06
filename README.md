@@ -49,4 +49,8 @@ The page also features the ability to filter by county, sort by each column head
 
 The My Report page lets the user know how many hours they've completed and how many hours the average user has completed.  Hours are calculated after an activity or gathering has passed is finish time.  The page also features a complete list of the user's activities and gatherings.
 
+### Campaign Report
 
+<img src="https://user-images.githubusercontent.com/62182071/103728160-3446f700-4fab-11eb-9098-d1c14f5c0b2a.png">
+
+The Campaign Report page lets the user know the top-five counties by population and the top-five counties in need of resources in the campaign.  It features a multi-variable pie chart representing the population and volunteer hours for each county.  It also features a traditional pie chart for the adjusted population of each county.  Adjust population is caluclated by taking population and subtracting the volunteer hours multiplied by five (Population - Hours * 5).
