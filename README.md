@@ -42,3 +42,11 @@ The Gatherings page displays group actions taken on behalf of a campaign.  Here 
 * Gatherings created by someone else that you can join.
 
 The page also features the ability to filter by county, sort by each column header, and to navigate through each page of gatherings (the app prints five gatherings per page).
+
+### My Report
+
+<img src="https://user-images.githubusercontent.com/62182071/103726471-ff38a580-4fa6-11eb-9c91-0e2d343ee952.png">
+
+The My Report page lets the user know how many hours they've completed and how many hours the average user has completed.  Hours are calculated after an activity or gathering has passed is finish time.  The page also features a complete list of the user's activities and gatherings.
+
+
