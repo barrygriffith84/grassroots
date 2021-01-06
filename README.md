@@ -18,5 +18,5 @@ https://www.youtube.com/watch?v=8ITCrvrkRXQ&feature=emb_title
 ## Walkthrough
 
 ### Homepage
-https://user-images.githubusercontent.com/62182071/103713470-6a27b380-4f8a-11eb-961f-d27c02ad261c.png
+<img src="https://user-images.githubusercontent.com/62182071/103713470-6a27b380-4f8a-11eb-961f-d27c02ad261c.png">
 
