@@ -14,3 +14,9 @@ https://www.youtube.com/watch?v=8ITCrvrkRXQ&feature=emb_title
 5.  In Package Manager enter the command **Add-Migration SeedDatabase**
 6.  In Package Manager enter the command **Update Database**
 7.  Ctrl+F5 to run the app
+
+## Walkthrough
+
+### Homepage
+https://user-images.githubusercontent.com/62182071/103713470-6a27b380-4f8a-11eb-961f-d27c02ad261c.png
+
